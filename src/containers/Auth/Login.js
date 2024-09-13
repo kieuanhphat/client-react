@@ -4,7 +4,7 @@ import { push } from "connected-react-router";
 import * as actions from "../../store/actions";
 import './Login.scss';
 import { FormattedMessage } from 'react-intl';
-
+import { handleLoginApi } from '../../services/userService';
 
 class Login extends Component {
     constructor(props) {
@@ -12,6 +12,7 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
+            errMessage: '',
             isShowPassword: false,
         }
     }
@@ -25,8 +26,29 @@ class Login extends Component {
             password: event.target.value
         })
     }
-    handleLogin = () => {
-        console.log('username: ', this.state.username, ' password', this.state.password)
+    handleLogin = async () => {
+        this.setState({
+            errMessage: ''
+        })
+        try {
+            let dataLogin = await handleLoginApi(this.state.username, this.state.password);
+            if (dataLogin && dataLogin.errCode !== 0) {
+                this.setState({
+                    errMessage: dataLogin.mess
+                })
+            }
+            if (dataLogin && dataLogin.errCode === 0) {
+                this.props.userLoginSuccess(dataLogin.userInfo)
+            }
+        } catch (e) {
+            if (e.response) {
+                if (e.response.data) {
+                    this.setState({
+                        errMessage: e.response.data.mess
+                    })
+                }
+            }
+        }
     }
 
     handleShowHidePass = () => {
@@ -44,7 +66,6 @@ class Login extends Component {
                             <label>User Name:</label>
                             <input
                                 type='text' className='form-control'
-                                name='username'
                                 placeholder='Enter your User Name'
                                 value={this.state.username}
                                 onChange={(event) => this.handleOnChangeUserName(event)}
@@ -55,19 +76,21 @@ class Login extends Component {
                             <div className='custom-input-pass'>
                                 <input
                                     type={this.state.isShowPassword ? 'text' : 'password'}
-                                    name='password'
                                     className='form-control'
                                     placeholder='Enter your Password'
                                     value={this.state.password}
-                                    onChange={(event) => this.handleOnChangePassword(event)}
+                                    onChange={(event) => { this.handleOnChangePassword(event) }}
                                 />
                                 <span onClick={() => { this.handleShowHidePass() }}>
                                     <i class={this.state.isShowPassword ? 'fas fa-eye' : 'fas fa-eye-slash'}></i>
                                 </span>
                             </div>
                         </div>
+                        <div className='col-12 text-error-login' >
+                            {this.state.errMessage}
+                        </div>
                         <div className='col-12'>
-                            <button className='btn-login' onClick={() => this.handleLogin()}>Login</button>
+                            <button className='btn-login' onClick={() => { this.handleLogin() }}>Login</button>
                         </div>
                         <div className='col-12'>
                             <span className='forgot-password'>Forgot your password!</span>
@@ -96,8 +119,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         navigate: (path) => dispatch(push(path)),
-        adminLoginSuccess: (adminInfo) => dispatch(actions.adminLoginSuccess(adminInfo)),
-        adminLoginFail: () => dispatch(actions.adminLoginFail()),
+        userLoginFail: () => dispatch(actions.userLoginFail()),
+        userLoginSuccess: (userInfo) => dispatch(actions.userLoginSuccess(userInfo)),
     };
 };
 
