@@ -3,5 +3,7 @@ import axios from "../axios"
 const handleLoginApi = (email, password) => {
   return axios.post('/api/login', { email, password });
 }
-
-export { handleLoginApi }
+const getAllUser = (id) => {
+  return axios.get(`/api/all-user?id=${id}`);
+}
+export { handleLoginApi, getAllUser }
