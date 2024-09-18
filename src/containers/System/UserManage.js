@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import './UserManage.scss';
-import { getAllUser } from '../../services/userService'
+import { getAllUser, createNewUserApi } from '../../services/userService'
 import ModalUser from './ModalUser';
 class UserManage extends Component {
     constructor(props) {
@@ -14,6 +14,9 @@ class UserManage extends Component {
     }
 
     async componentDidMount() {
+        await this.getAllUsersFromReact();
+    }
+    getAllUsersFromReact = async () => {
         let response = await getAllUser('all');
         if (response && response.errCode === 0) {
             this.setState({
@@ -25,13 +28,27 @@ class UserManage extends Component {
         this.setState({
             isOpenModalUser: true,
         })
-        console.log(this.state.isOpenModalUser)
     }
 
     toggleModelUser = () => {
         this.setState({
             isOpenModalUser: !this.state.isOpenModalUser,
         })
+    }
+    createNewUser = async (data) => {
+        try {
+            let response = await createNewUserApi(data);
+            if (response && response.mess.errCode !== 0) {
+                alert(response.mess.mess)
+            } else {
+                await this.getAllUsersFromReact();
+                this.setState({
+                    isOpenModalUser: false
+                })
+            }
+        } catch (e) {
+            console.log(e);
+        }
     }
     render() {
         let arrUsers = this.state.arrUser;
@@ -40,6 +57,7 @@ class UserManage extends Component {
                 <ModalUser
                     isOpen={this.state.isOpenModalUser}
                     toggleModelUser={this.toggleModelUser}
+                    createNewUser={this.createNewUser}
                 />
                 <div className="title text-center">Manage Users</div>
                 <div className='mx-1'>
@@ -47,29 +65,30 @@ class UserManage extends Component {
                 </div>
                 <div className='user-table mt-3 mx-1'>
                     <table id="customers">
-                        <tr>
-                            <th>Email</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Address</th>
-                            <th>Action</th>
-                        </tr>
-                        {arrUsers && arrUsers.map((item, index) => {
-                            return (
-                                <tr>
-                                    <td>{item.email}</td>
-                                    <td>{item.firstName}</td>
-                                    <td>{item.lastName}</td>
-                                    <td>{item.address}</td>
-                                    <td>
-                                        <button className='btn-edit'><i className="fas fa-edit"></i></button>
-                                        <button className='btn-delete'><i className="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                            )
-                        })
-                        }
-
+                        <tbody>
+                            <tr>
+                                <th>Email</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                            {arrUsers && arrUsers.map((item, index) => {
+                                return (
+                                    <tr>
+                                        <td>{item.email}</td>
+                                        <td>{item.firstName}</td>
+                                        <td>{item.lastName}</td>
+                                        <td>{item.address}</td>
+                                        <td>
+                                            <button className='btn-edit'><i className="fas fa-edit"></i></button>
+                                            <button className='btn-delete'><i className="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                            }
+                        </tbody>
                     </table>
                 </div>
             </div>
