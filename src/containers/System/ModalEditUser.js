@@ -2,36 +2,33 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { emitter } from '../../utils/emitter'
-class ModalUSer extends Component {
+import _ from 'lodash';
+class ModalEditUSer extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
       lastName: '',
       firstName: '',
       address: '',
+      id: '',
     }
-    this.listenToEmitter();
   }
-  listenToEmitter() {
-    emitter.on('EVENT_CLEAR_MODAL_DATA', () => {
-      this.setState({
-        email: '',
-        password: '',
-        lastName: '',
-        firstName: '',
-        address: '',
-      })
-    })
-  }
+
   componentDidMount() {
+    let user = this.props.dataUser;
+    if (user && !_.isEmpty(user)) {
+      this.setState({
+        id: user.id,
+        lastName: user.lastName,
+        firstName: user.firstName,
+        address: user.address,
+      })
+    }
   }
 
   toggle = () => {
-    this.props.toggleModalUser();
+    this.props.toggleModalEditUser();
   }
   handleOnChange = (event, id) => {
     let copyState = { ...this.state };
@@ -42,7 +39,7 @@ class ModalUSer extends Component {
   }
   checkValidate = () => {
     let isValid = true;
-    let arrInput = ['email', 'password', 'lastName', 'firstName', 'address'];
+    let arrInput = ['lastName', 'firstName', 'address'];
     for (let i = 0; i < arrInput.length; i++) {
       if (!this.state[arrInput[i]]) {
         isValid = false;
@@ -51,10 +48,10 @@ class ModalUSer extends Component {
     }
     return isValid;
   }
-  handleAddNewUser = () => {
+  handleSaveUser = () => {
     let isValid = this.checkValidate();
     if (isValid === true) {
-      this.props.createNewUser(this.state)
+      this.props.saveEditUser(this.state)
     }
   }
   render() {
@@ -66,25 +63,9 @@ class ModalUSer extends Component {
         size='lg'
         centered
       >
-        <ModalHeader toggle={() => { this.toggle() }}>Create User</ModalHeader>
+        <ModalHeader toggle={() => { this.toggle() }}>Edit User</ModalHeader>
         <ModalBody>
           <div className='modal-user-body'>
-            <div className='input-container'>
-              <label>Email</label>
-              <input
-                type='text'
-                onChange={(event) => { this.handleOnChange(event, 'email') }}
-                value={this.state.email}
-              />
-            </div>
-            <div className='input-container'>
-              <label>Password</label>
-              <input
-                type='password'
-                onChange={(event) => { this.handleOnChange(event, 'password') }}
-                value={this.state.password}
-              />
-            </div>
             <div className='input-container'>
               <label>First Name</label>
               <input
@@ -113,8 +94,8 @@ class ModalUSer extends Component {
 
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" className='px-3' onClick={() => { this.handleAddNewUser() }}>
-            Add new
+          <Button color="primary" className='px-3' onClick={() => { this.handleSaveUser() }}>
+            Save
           </Button>{' '}
           <Button color="secondary" className='px-3' onClick={() => { this.toggle() }}>
             Close
@@ -136,6 +117,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalUSer);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalEditUSer);
 
 
