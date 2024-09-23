@@ -1,4 +1,23 @@
 {
+    "homeHeader":{
+        "HH00" : "Chuyên Khoa",
+        "HH01" : "Tìm bác sĩ theo chuyên khoa",
+        "HH02": "Cơ sở y tế",
+        "HH03":"Chọn bệnh viện phòng khám",
+        "HH04":"Bác sĩ",
+        "HH05":"Chọn bác sĩ giỏi",
+        "HH06":"Gói khám",
+        "HH07":"Khám sứt khỏe tổng quát",
+        "HH08":" Hỗ trợ",
+        "HH09":"NỀN TẢNG Y TẾ",
+        "HH10":"CHĂM SÓC SỨT KHỎE TOÀN DIỆN",
+        "HH11":"Khám Chuyên Khoa",
+        "HH12":"Khám Từ Xa",
+        "HH13":"Khám Tổng Quát",
+        "HH14":"Xét Nghiệm Y Học",
+        "HH15":"Sứt Khỏe Tinh Thần",
+        "HH16":"Khám Nha Khoa"
+    },
     "common": {
         "add": "Thêm",
         "edit": "Sửa",

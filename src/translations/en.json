@@ -1,4 +1,23 @@
 {
+    "homeHeader":{
+        "HH00": "Specialty",
+        "HH01": "Find doctors by specialty",
+        "HH02": "Medical facility",
+        "HH03": "Choose a hospital or clinic",
+        "HH04": "Doctor",
+        "HH05": "Choose a good doctor",
+        "HH06": "Checkup package",
+        "HH07": "General health check",
+        "HH08": "Support",
+        "HH09": "MEDICAL FOUNDATION",
+        "HH10": "COMPREHENSIVE HEALTH CARE",
+        "HH11": "Specialized Examination",
+        "HH12": "Remote Examination",
+        "HH13": "General Examination",
+        "HH14": "Medical Tests",
+        "HH15": "Mental Health",
+        "HH16": "Dental Examination"
+    },
     "common": {
         "add": "Add",
         "edit": "Edit",
